@@ -1,13 +1,12 @@
 <template>
- <div id="all">
-   主要内容展示区
- </div>
-
+  <div id="all">
+    订单
+  </div>
 </template>
 
 <script>
   export default {
-    name: 'contextBox'
+    name: 'orderManage'
   }
 </script>
 
