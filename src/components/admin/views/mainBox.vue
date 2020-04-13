@@ -27,6 +27,10 @@
           <i class="el-icon-document"></i>
           <span slot="title">商品</span>
         </el-menu-item>
+        <el-menu-item index="/admin/insertProd">
+          <i class="el-icon-document"></i>
+          <span slot="title">商品录入</span>
+        </el-menu-item>
         <el-menu-item index="/admin/order">
           <i class="el-icon-document"></i>
           <span slot="title">订单</span>
@@ -64,15 +68,15 @@
     height: 10%;
   }
   .sideBar{
-    width: 10%;
+    width: 15%;
     float: left;
   }
   .contextBox{
-    padding:20px 20px 40px 20px;
+    padding:20px 20px 20px 20px;
     display: block;
     right: 0;
     position: absolute;
-    left: 10%;
+    left: 15%;
     float: left;
   }
 

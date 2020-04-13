@@ -1,11 +1,28 @@
 <template>
   <div id="all">
     <div class="searchArea">
-<!--      <el-input v-model="keyWord" ></el-input>-->
+      <el-form size="mini" :inline="true" :model="formInline" class="inlineForm">
+        <el-form-item>
+          <el-select clearable v-model="formInline.category" placeholder="商品种类">
+            <el-option
+              v-for="item in goodCatgorys"
+              :key="item._id"
+              :label="item.name"
+              :value="item._id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item >
+          <el-input clearable v-model="formInline.details" placeholder="商品名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="searchGood(formInline)">查询</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <div class="showArea">
       <el-table
-        height="550"
+        height="480"
         border
         :data="tableData"
         style="width: 100%">
@@ -23,7 +40,14 @@
         <el-table-column
           label="商品图片">
           <template slot-scope="scope">
-            {{ scope.row.cover }}
+            <el-image
+
+              :src="scope.row.cover"
+              fit="contain">
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture"></i>
+              </div>
+            </el-image>
           </template>
         </el-table-column>
         <el-table-column
@@ -47,14 +71,14 @@
         <el-table-column
           label="分类">
           <template slot-scope="scope">
-            {{ scope.row.category===null?'未知':scope.row.category._id }}
+            {{ scope.row.category===null?'未知':scope.row.category.name }}
           </template>
         </el-table-column>
         <el-table-column
           label="修改时间">
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.updateTime }}</span>
+            <span style="margin-left: 10px">{{ scope.row.updateTime}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -99,7 +123,7 @@
           <el-input v-model="sizeForm.name"></el-input>
         </el-form-item>
         <el-form-item label="商品种类">
-          <el-select v-model="sizeForm.category._id" placeholder="选择商品种类">
+          <el-select style="width: 100%" v-model="sizeForm.category._id" placeholder="选择商品种类">
             <el-option
               v-for="item in goodCatgorys"
               :key="item._id"
@@ -132,6 +156,10 @@
     data(){
       return{
         editingRow:'',
+        formInline:{
+          details: '',
+          category:''
+        },
         sizeForm:{
           name:'',
           price:0,
@@ -151,11 +179,15 @@
       }
     },
     mounted () {
-      this.getTableData(1)
+      this.getTableData('','',1)
       this.getCategory()
 
     },
     methods: {
+      searchGood(value){
+        console.log(value)
+        this.getTableData(value.category,value.details,1)
+      },
       onSubmit(){
         this.$http({
           method:"PUT",
@@ -169,7 +201,7 @@
               type:'error'
             })
           }
-          this.getTableData(this.currentPage)
+          this.getTableData('','',this.currentPage)
         }).catch(error=>{
           if(!error.response.data.flag){
             this.$message({
@@ -194,11 +226,13 @@
         }).catch(() => {
         });
       },
-      getTableData(page){
+      getTableData(category,condition,page){
         this.$http({
           method:"GET",
           url:"/api/products",
           params:{
+            category:category,
+            details:condition,
             pages:page
           }
         }).then(response=>{
@@ -219,6 +253,7 @@
               message:error.response.data.message,
               type:'error'
             })
+            this.tableData = []
           }
         })
       },
@@ -236,7 +271,7 @@
               message: response.data.message,
               type: 'success'
             })
-            this.getTableData(1)
+            this.getTableData('','',1)
           }
         }).catch(error=>{
           //400请求调到error种，error默认显示error.message
@@ -251,16 +286,15 @@
       handleCurrentChange(value){
         this.currentPage = value
         console.log(value)
-        this.getTableData(value)
+        this.getTableData('','',value)
 
       },
       handleEdit(value) {
         for(let item  in value){
           this.sizeForm[item] = value[item]
         }
-        console.log(this.sizeForm)
+        console.log("this.sizeForm",this.sizeForm)
         this.editingRow = value._id
-
         this.dialogVisible=true
       },
       handleDelete(index, row) {
@@ -274,7 +308,7 @@
               type:'success',
               duration:2000
             })
-            this.getTableData(this.currentPage)
+            this.getTableData('','',this.currentPage)
           }
         }).catch(error=>{
           if(!error.response.data.flag){
@@ -317,9 +351,10 @@
     padding:20px;
     text-align: right
   }
-  .newBtn {
-    float: left;
-    margin: 0 0 10px 10px ;
+  .inlineForm{
+    padding:0px 20px;
+    text-align: left
+
   }
 
 </style>

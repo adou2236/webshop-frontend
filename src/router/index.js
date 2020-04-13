@@ -8,6 +8,7 @@ import catgoryManage from '../components/admin/views/catgoryManage/catgoryManage
 import productManage from '../components/admin/views/productManage/productManage'
 import orderManage from '../components/admin/views/orderManage/orderManage'
 import firstPage from '../components/admin/views/firstPage/firstPage'
+import insertProd from '../components/admin/views/insertProd/insertProd'
 
 Vue.use(Router)
 
@@ -48,6 +49,10 @@ export default new Router({
         path:'/admin/firstPage',
         name: 'firstPage',
         component: firstPage,
+       },{
+        path:'/admin/insertProd',
+        name: 'insertProd',
+        component: insertProd,
        }]
     }
   ]
