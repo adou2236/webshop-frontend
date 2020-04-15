@@ -4,8 +4,8 @@
       <el-form size="mini" :inline="true" :model="formInline" class="inlineForm">
         <el-form-item>
           <el-select clearable v-model="formInline.status" placeholder="支付状态">
-            <el-option label="支付完成" value="0"></el-option>
-            <el-option label="待支付" value="1"></el-option>
+            <el-option label="待支付" value="0"></el-option>
+            <el-option label="已支付" value="1"></el-option>
             <el-option label="超时" value="2"></el-option>
           </el-select>
         </el-form-item>
@@ -40,25 +40,35 @@
         <el-table-column
           label="订单号">
           <template slot-scope="scope">
-              {{ scope.row._id }}
+              {{ scope.row.orderId }}
           </template>
         </el-table-column>
         <el-table-column
           label="下单用户">
           <template slot-scope="scope">
-            {{ scope.row.price }}
+            {{ scope.row.orderUser.name }}
           </template>
         </el-table-column>
         <el-table-column
           label="商品">
           <template slot-scope="scope">
-            {{ scope.row.price }}
+            <el-popover
+              placement="right"
+              width="400"
+              trigger="click">
+              <el-table :data="scope.row.goodsList">
+                <el-table-column width="150" property="product.name" label="商品名称"></el-table-column>
+                <el-table-column width="150" property="product.price" label="购买价格"></el-table-column>
+                <el-table-column width="100" property="sum" label="数量"></el-table-column>
+              </el-table>
+              <el-button type="info" plain slot="reference">查看</el-button>
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column
           label="总金额">
           <template slot-scope="scope">
-            {{ scope.row.totalMoney }}
+            ￥{{ scope.row.totalMoney }}
           </template>
         </el-table-column>
         <el-table-column
@@ -71,8 +81,8 @@
         <el-table-column
           label="支付状态">
           <template slot-scope="scope">
-            <span v-if="scope.row.status === 0">已支付</span>
-            <span v-if="scope.row.status === 1">未支付</span>
+            <span v-if="scope.row.status === 0">待支付</span>
+            <span v-if="scope.row.status === 1">已支付</span>
             <span v-if="scope.row.status === 2">超时</span>
 
           </template>
@@ -178,14 +188,14 @@
       }
     },
     mounted () {
-      this.getTableData('','','',1)
+      this.getTableData('','','','',1)
       // this.getCategory()
 
     },
     methods: {
       searchOrder(value){
         console.log(value)
-        this.getTableData(value.orderId,value.status,value.payMethod,1)
+        this.getTableData(value.orderUser,value.status,value.payMethod,value.orderId,1)
       },
       // onSubmit(){
       //   this.$http({
@@ -225,7 +235,7 @@
         }).catch(() => {
         });
       },
-      getTableData(orderUser,status,payMethod,pages){
+      getTableData(orderUser,status,payMethod,orderId,pages){
         this.$http({
           method:"GET",
           url:"/api/order",
@@ -233,6 +243,7 @@
             orderUser:orderUser,
             status:status,
             payMethod:payMethod,
+            orderId:orderId,
             pages:pages
           }
         }).then(response=>{
@@ -258,68 +269,68 @@
           }
         })
       },
-      sureEditstatisticalValue(value){
-        value._self.$refs[`popover-${value.$index}`].doClose();
-        this.$http({
-          method:"PUT",
-          url:"/api/categories/"+value.row._id,
-          data:{
-            name:this.editstatisticalValue
-          }
-        }).then(response=>{
-          if(response.data.flag) {
-            this.$message({
-              message: response.data.message,
-              type: 'success'
-            })
-            this.getTableData('','',1)
-          }
-        }).catch(error=>{
-          //400请求调到error种，error默认显示error.message
-          if(!error.response.data.flag){
-            this.$message({
-              message:error.response.data.message,
-              type:'error'
-            })
-          }
-        })
-      },
+      // sureEditstatisticalValue(value){
+      //   value._self.$refs[`popover-${value.$index}`].doClose();
+      //   this.$http({
+      //     method:"PUT",
+      //     url:"/api/categories/"+value.row._id,
+      //     data:{
+      //       name:this.editstatisticalValue
+      //     }
+      //   }).then(response=>{
+      //     if(response.data.flag) {
+      //       this.$message({
+      //         message: response.data.message,
+      //         type: 'success'
+      //       })
+      //       this.getTableData('','',1)
+      //     }
+      //   }).catch(error=>{
+      //     //400请求调到error种，error默认显示error.message
+      //     if(!error.response.data.flag){
+      //       this.$message({
+      //         message:error.response.data.message,
+      //         type:'error'
+      //       })
+      //     }
+      //   })
+      // },
       handleCurrentChange(value){
         this.currentPage = value
         console.log(value)
-        this.getTableData(this.formInline.orderUser,this.formInline.status,this.formInline.payMethod,value)
+        this.getTableData(this.formInline.orderUser,this.formInline.status,this.formInline.payMethod,this.formInline.orderId,value)
 
       },
-      handleEdit(value) {
-        for(let item  in value){
-          this.sizeForm[item] = value[item]
-        }
-        console.log("this.sizeForm",this.sizeForm)
-        this.editingRow = value._id
-        this.dialogVisible=true
-      },
-      handleDelete(index, row) {
-        this.$http({
-          method:"DELETE",
-          url:"/api/products/"+row._id
-        }).then(response=>{
-          if(response.data.flag){
-            this.$message({
-              message:response.data.message,
-              type:'success',
-              duration:2000
-            })
-            this.getTableData('','',this.currentPage)
-          }
-        }).catch(error=>{
-          if(!error.response.data.flag){
-            this.$message({
-              message:error.response.data.message,
-              type:'error'
-            })
-          }
-        })
-      },
+      // handleEdit(value) {
+      //   for(let item  in value){
+      //     this.sizeForm[item] = value[item]
+      //   }
+      //   console.log("this.sizeForm",this.sizeForm)
+      //   this.editingRow = value._id
+      //   this.dialogVisible=true
+      // },
+      // handleDelete(index, row) {
+      //   this.$http({
+      //     method:"DELETE",
+      //     url:"/api/products/"+row._id
+      //   }).then(response=>{
+      //     if(response.data.flag){
+      //       this.$message({
+      //         message:response.data.message,
+      //         type:'success',
+      //         duration:2000
+      //       })
+      //       this.getTableData('','',this.currentPage)
+      //     }
+      //   }).catch(error=>{
+      //     if(!error.response.data.flag){
+      //       this.$message({
+      //         message:error.response.data.message,
+      //         type:'error'
+      //       })
+      //     }
+      //   })
+      // },
       // getCategory(){
       //   this.$http({
       //     method:"GET",
