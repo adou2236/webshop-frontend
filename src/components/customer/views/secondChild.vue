@@ -18,8 +18,17 @@
     name: 'secondChild',
     data(){
       return{
-        activeIndex: '1',
+        activeIndex: '',
       }
+    },
+    watch:{
+      $route(to,from){
+        this.activeIndex = to.path;
+      }
+    },
+
+    mounted () {
+      this.activeIndex = this.$route.path
     }
   }
 </script>
