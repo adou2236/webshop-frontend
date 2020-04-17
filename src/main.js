@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import store from "../src/store/index"
 import axios from 'axios';
 
 Vue.use(ElementUI)
@@ -37,6 +38,7 @@ $http.interceptors.response.use(function (response) {
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   $http,
   router,
   components: { App },

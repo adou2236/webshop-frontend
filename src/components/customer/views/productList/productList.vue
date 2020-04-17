@@ -14,7 +14,13 @@
           </el-image>
           <div class="title">{{good.name}}</div>
           <div class="details">描述</div>
-          <div class="price">￥{{good.price}}</div>
+          <div class="price">
+            <div class="addToCart">
+              <el-button size="mini" type="danger" @click="addToCart(good)">加入购物车</el-button>
+            </div>
+            <p>￥{{good.price}}</p>
+          </div>
+
         </div>
         <div class="noGoods" v-if="noGoods">没有商品</div>
       </div>
@@ -23,6 +29,7 @@
 
 <script>
   import {getAllGoods} from '../../../../apis/customer'
+  import state from '../../../../store/state'
 
   export default {
     name: 'productList',
@@ -62,6 +69,9 @@
       })
     },
     methods:{
+      addToCart(good){
+        this.$store.commit('changeCart', good._id);
+      },
       changeOrder(v){
         this.order = v
         if(v.type!==undefined){
@@ -127,9 +137,28 @@
     color: #d0d0d0;
   }
   .price{
-    font-family: Arial;
     font-size: 14px;
     color: #d44d44
   }
+  .addToCart{
+    display: none;
+  }
 
+
+
+</style>
+<style lang="scss">
+  .goodsBox{
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 1px 1px 10px #999;
+      .price p {
+        display: none;
+      }
+      .addToCart {
+        text-align: center;
+        display: block;
+      }
+    }
+  }
 </style>

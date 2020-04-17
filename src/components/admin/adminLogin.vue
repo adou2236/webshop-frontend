@@ -26,6 +26,9 @@
     </div>
 </template>
 <script>
+  import {getGood} from '../../apis/customer'
+  import state from '../../store/state'
+
   export default {
     name: 'adminLogin',
     data() {
@@ -46,7 +49,11 @@
         }
       }
     },
+    mounted () {
+
+    },
     methods:{
+
       login(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -73,7 +80,8 @@
           }
         });
       },
-    }
+    },
+
   }
 </script>
 

@@ -10,3 +10,17 @@ export const getAllGoods = (params) => {
     params:params
   })
 }
+
+export const getGood = (params) => {
+  return $http({
+    url:'/api/products/'+params,
+    method:"GET",
+  })
+}
+
+export const ceateOrder = (params) => {
+  return $http({
+    url:'/api/order/newOrder',
+    method:"POST",
+  })
+}
