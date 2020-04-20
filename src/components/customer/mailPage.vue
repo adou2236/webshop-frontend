@@ -12,19 +12,20 @@
         </el-input>
       </div>
       <div  class="userInfo">
-        <div class="userAvg">
+        <div class="userAvg"  @click="$router.push({path:'/userMsg'})">
           <div><el-avatar  :size="40" icon="el-icon-user-solid"></el-avatar></div>
           <el-popover
-            placement="bottom-end"
+            :disabled="userName!==''"
+            placement="bottom"
             width="90"
             trigger="hover">
             <div style="text-align: center; margin: 0">
 <!--              <el-button style="width: 80%" type="danger" size="mini" @click="logout">退出</el-button>-->
             </div>
-            <span slot="reference" class="userName">{{userName}}  <i class="el-icon-arrow-down"></i></span>
+            <span slot="reference" class="userName">{{userName||'未登录'}}  <i class="el-icon-arrow-down"></i></span>
           </el-popover>
         </div>
-        <div @click="$router.push({path:'/cart'})" class="cart">
+        <div @click="toCartPage" class="cart">
           <el-popover
             placement="bottom"
             width="250"
@@ -90,12 +91,13 @@
 
 <script>
   import state from '../../store/state'
-  import {getGood} from '../../apis/customer'
+  import {getGood, submitRate} from '../../apis/customer'
 
   export default {
     name: 'mailPage',
     data(){
       return{
+        userName :localStorage.getItem('name'),
         cart:[],
         value:0,
         totalNum:0,
@@ -103,7 +105,6 @@
         message:'',
         iconClasses: ['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3'],
         keyWord:'',
-        userName:"ghq1"
       }
     },
     mounted () {
@@ -122,6 +123,9 @@
       }
     },
     methods:{
+      toCartPage(){
+      this.$router.push({path:'/cart'})
+      },
       getCartGoods(){
         let cartGoods = state.cart
         console.log(state.cart)
@@ -140,7 +144,12 @@
       },
       putRate(){
         this.visible=false
-        console.log(this.message,this.value)
+        let data = {
+          rate:this.value,
+          message: this.message,
+          userId:"554"
+        }
+        submitRate(data)
       },
       search() {
         this.$router.push({name:'productList',query:{keyWord:this.keyWord}})
@@ -206,6 +215,7 @@
     height: 350px;
   }
   .userAvg {
+    cursor: pointer;
     display: flex;
     padding: 0 40px;
     align-items:center;
@@ -215,6 +225,7 @@
     color: #FFFFFF;
   }
   .cart{
+    cursor: pointer;
     font-size: 30px;
     display: flex;
     align-items:center;

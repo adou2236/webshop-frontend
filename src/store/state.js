@@ -1,6 +1,6 @@
 let token = '';
 let userId = '';
-let userName = '未登录';
+let name = '';
 let cart = {
   goods:[],
   totalNum:0
@@ -11,13 +11,12 @@ try {
   }
   if (localStorage.getItem('cart')) {
     cart =JSON.parse(localStorage.getItem('cart'))
-    console.log("购物车为",cart)
   }
 } catch (e) {}
 
 export default{
   token: token,
   userId:userId,
-  userName:userName,
+  name:name,
   cart:cart,
 }

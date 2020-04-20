@@ -62,13 +62,8 @@
           <div class="payBtn">
             <el-button type="primary" size="big" @click="sendOrder">确认订单</el-button>
           </div>
-
-
         </div>
-
       </div>
-
-
     </div>
 
   </div>
@@ -100,6 +95,7 @@
     },
     methods:{
       sendOrder(){
+        this.$router.push({path:"/order"})
 
       },
       getCartGoods(){
@@ -151,7 +147,6 @@
     font-size: 20px;
   }
   .optionBar{
-
     display: block;
     height: 80px;
   }

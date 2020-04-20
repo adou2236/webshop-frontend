@@ -11,10 +11,15 @@ export default{
       localStorage.userId = userId
     } catch (e) {}
   },
-  changeUserName (state, userName) {
-    state.userName = userName;
+  changeName (state, name) {
+    state.name = name;
     try {
-      localStorage.userName = userName
+      localStorage.name = name
+    } catch (e) {}
+  },
+  savePassWord (state, password) {
+    try {
+      localStorage.password = password
     } catch (e) {}
   },
   changeCart (state,cart){

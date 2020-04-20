@@ -17,6 +17,7 @@ import orderList from '../components/customer/views/orderList/orderList'
 import orderPage from '../components/customer/views/orderPage/orderPage'
 import homePage from '../components/customer/views/homePage/homePage'
 import secondChild from '../components/customer/views/secondChild'
+import userLogin from '../components/customer/views/userDetails/userLogin'
 
 
 Vue.use(Router)
@@ -67,6 +68,11 @@ export default new Router({
           component: userDetails,
         }
       ]
+    },
+    {
+      path:'/login',
+      name:'userLogin',
+      component:userLogin,
     },
     {
       path: '/admin/login',
