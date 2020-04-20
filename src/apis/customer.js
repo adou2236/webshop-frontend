@@ -56,3 +56,10 @@ export const updateAddress = (data) =>{
     data:data
   })
 }
+
+export const deleteAddress = (id) =>{
+   return $http({
+    url:'/api/resiver/'+id,
+    method:"DELETE",
+  })
+}
