@@ -12,12 +12,14 @@ import mailPage from '../components/customer/mailPage'
 import cartPage from '../components/customer/views/cartPage/cartPage'
 import productDetails from '../components/customer/views/productDetails/productDetails'
 import productList from '../components/customer/views/productList/productList'
-import userDetails from '../components/customer/views/userDetails/userDetails'
-import orderList from '../components/customer/views/orderList/orderList'
 import orderPage from '../components/customer/views/orderPage/orderPage'
 import homePage from '../components/customer/views/homePage/homePage'
 import secondChild from '../components/customer/views/secondChild'
 import userLogin from '../components/customer/views/userDetails/userLogin'
+import userDetails from '../components/customer/views/userDetails/userDetails'
+import orderList from '../components/customer/views/userDetails/orderList'
+import resiverList from '../components/customer/views/userDetails/resiverList'
+import unDetermin from '../components/customer/views/userDetails/unDetermin'
 
 
 Vue.use(Router)
@@ -55,10 +57,6 @@ export default new Router({
           name: 'orderPage',
           component: orderPage,
         },{
-          path: '/myOrder',
-          name: 'orderList',
-          component: orderList,
-        },{
           path: '/cart',
           name: 'cartPage',
           component: cartPage,
@@ -66,6 +64,24 @@ export default new Router({
           path: '/userMsg',
           name: 'userDetails',
           component: userDetails,
+          redirect:'/userMsg/resiverList',
+          children: [
+            {
+              path:'/userMsg/resiverList',
+              name:'resiverList',
+              component:resiverList
+            },
+            {
+              path:'/userMsg/orderList',
+              name:'orderList',
+              component:orderList
+            },
+            {
+              path:'/userMsg/unDetermin',
+              name:'unDetermin',
+              component:unDetermin
+            }
+          ]
         }
       ]
     },

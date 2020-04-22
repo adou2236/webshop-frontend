@@ -55,7 +55,6 @@ const freePage = ['/home', '/productList', '/product','/login', '/register','/ad
 
 //路由跳转统一处理，token反验证
 router.beforeEach((to, from, next) => {
-  console.log("目标页",to)
   if (freePage.indexOf(to.path)===-1) {  // 判断该路由是否需要token
     if (localStorage.getItem("token")) {  // 获取当前的token是否存在
       next();

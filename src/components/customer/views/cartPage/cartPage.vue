@@ -1,9 +1,10 @@
 <template>
   <div id="all">
     <div class="cartTable">
-      <div class="header">
-        <div class="title">购物车</div>
-      </div>
+      <h-title v-bind:title="'购物车'"></h-title>
+<!--      <div class="header">-->
+<!--        <div class="title">购物车</div>-->
+<!--      </div>-->
       <div class="table">
         <el-table
           :highlight-current-row="false"
@@ -15,9 +16,12 @@
             type="selection">
           </el-table-column>
           <el-table-column
-            prop="name"
             label="商品"
             width="180">
+            <template slot-scope="scope">
+              <el-image style="width: 80px;height: 80px" :src="scope.row.cover"></el-image>
+              <span style="top: 50%;position: absolute;transform: translateY(-50%); margin-left: 10px">{{scope.row.name}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             label="单价"
@@ -52,12 +56,14 @@
         </el-table>
       </div>
       <div class="optionBar">
-        <div class="checkAll">全选</div>
+        <div class="checkAll">
+          <el-checkbox style="margin: auto" v-model="checked" @change="$refs.multipleTable.toggleAllSelection()" >{{checked?'全不选':'全选'	}}</el-checkbox>
+        </div>
         <div class="message">
           <div class="sumMsg">
             <div style="display: flex;margin-right:10px">共{{totalNum}}件商品</div>
             <div>|</div>
-            <div style="margin-left:10px;display: flex">总金额为:￥{{sumMoney}}</div>
+            <div style="margin-left:10px;display: flex">总金额为:￥{{totalMoney}}</div>
           </div>
           <div class="payBtn">
             <el-button type="primary" size="big" @click="sendOrder">确认订单</el-button>
@@ -70,25 +76,23 @@
 </template>
 
 <script>
+  import hTitle from '../tools/hTitle'
   import state from '../../../../store/state'
   import {getGood} from '../../../../apis/customer'
+  import HTitle from '../tools/hTitle'
 
   export default {
     name: 'cartPage',
+    components: {HTitle},
     data(){
       return{
+        checked:false,
         totalMoney:0,
         totalNum:0,
         cartData:[]
       }
     },
     computed:{
-      sumMoney(){
-        console.log()
-        return this.cartData.map(
-          row=>row.price*row.num).reduce(
-          (acc, cur) => (cur + acc), 0)
-      }
     },
     mounted () {
       this.getCartGoods()
@@ -100,13 +104,12 @@
       },
       getCartGoods(){
         let cartGoods = state.cart
-        console.log(state.cart)
-        this.totalNum = cartGoods.totalNum
+        console.log("ccc",state.cart)
         cartGoods.goods.forEach(item=>{
           getGood(item.id).then(response => {
             if(response.data.flag){
               let {data} = response.data
-              this.cartData.push({id:data.id,name:data.name,price:data.price,num:item.num,img:data.cover})
+              this.cartData.push({id:data._id,name:data.name,price:data.price,num:item.num,cover:data.cover})
             }
           }).catch(err=>{
           })
@@ -117,12 +120,28 @@
       deleteRow(){
 
       },
-      handleSelectionChange(){
+      handleSelectionChange(e){
+        this.totalNum = 0
+        this.totalMoney = 0
+        if(e.length!==0){
+          e.forEach(item=>{
+              this.totalNum+=item.num
+              this.totalMoney+=item.num*item.price
+            }
+          )
+        }
 
       }
     }
   }
 </script>
+
+<style lang="scss">
+  thead tr th:first-child div{
+    visibility: hidden;
+  }
+
+</style>
 
 <style scoped>
   #all {
@@ -151,8 +170,12 @@
     height: 80px;
   }
   .checkAll{
+    box-sizing: border-box;
+    padding:15px;
+    height: 100%;
+    display: flex;
     float:left;
-    width: 30%;
+    width: 10%;
   }
   .message{
     align-items: center;

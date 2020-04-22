@@ -2,7 +2,7 @@
     <div id="all">
       <div class="checkOut">
         <div class="mainArea">
-          <div class="header">收货地址</div>
+          <h-title v-bind:title="'收货地址'"/>
           <div class="localList">
             <div class="resieverBox" :class="flag===item._id?'choosed':''" v-for="item in Resiver" :key="item._id">
               <div @click="changeLocation(item._id)" >
@@ -29,7 +29,7 @@
           </div>
         </div>
         <div class="mainArea">
-          <div class="header">订单详情</div>
+          <h-title v-bind:title="'订单详情'"/>
           <div class="goodsList">
             <div style="width: 100%;padding: 0 30px;box-sizing: border-box">
               <el-table
@@ -40,7 +40,7 @@
                   label="商品">
                   <template slot-scope="scope">
                     <el-image style="width: 80px;height: 80px" :src="scope.row.cover"></el-image>
-                    <span style="top: 50%;position: absolute;transform: translateY(-50%); ">{{scope.row.name}}</span>
+                    <span style="top: 50%;position: absolute;transform: translateY(-50%); margin-left: 10px">{{scope.row.name}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -105,7 +105,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="cancel">取 消</el-button>
+          <el-button @click="dialogFormVisible=false">取 消</el-button>
           <el-button type="primary" @click="updateAddress">确 定</el-button>
         </div>
       </el-dialog>
@@ -113,11 +113,14 @@
 </template>
 
 <script>
+  import hTitle from '../tools/hTitle'
   import state from '../../../../store/state'
   import {getGood, ceateOrder, getResiver, updateAddress, deleteAddress} from '../../../../apis/customer'
+  import HTitle from '../tools/hTitle'
 
   export default {
     name: 'orderPage',
+    components: {HTitle},
     data(){
       return{
         localform:{
@@ -156,23 +159,32 @@
 
     },
     methods:{
+      stopBubbling(e) {
+        e = window.event || e;
+        if (e.stopPropagation) {
+          e.stopPropagation();      //阻止事件 冒泡传播
+        } else {
+          e.cancelBubble = true;   //ie兼容
+        }
+      },
       setProvince(data){
         console.log("data",data)
         this.localform.areaAddress = data.province.value+' '+data.city.value+' '+data.area.value
 
       },
-      cancel(){
-
-      },
       updateAddress(){
         this.localform.userId = localStorage.getItem("userId")
-        console.log(this.localform)
         updateAddress(this.localform).then(res=>{
-          console.log(res)
+          this.getResiverList()
+          this.dialogFormVisible = false
         }).catch(err=>{
-          console.log(err)
+          if(!err.response.data.flag){
+            this.$message({
+              message:err.response.data.message,
+              type:'error'
+            })
+          }
         })
-
       },
       getCartGoods(){
         let cartGoods = state.cart
@@ -198,7 +210,6 @@
               return item.isdefault
             })
             this.flag = asb._id
-            console.log("asb",asb)
           }
         }).catch(err=>{
 
@@ -215,6 +226,7 @@
 
       },
       updateLocation(value){//修改要传_id
+        this.stopBubbling(event);
         const abc = value.areaAddress.split(' ')
         this.localform.province = abc[0]
         this.localform.city= abc[1]
@@ -227,12 +239,28 @@
         this.dialogFormVisible=true
       },
       deleteLocation(id){
-        console.log(id)
-        deleteAddress(id).then(res=>{
-          console.log(res)
-        }).catch(err=>{
-          console.log(err)
-        })
+        this.stopBubbling(event);
+        this.$confirm('确认删除此地址吗？', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          showClose:false
+        }).then(() => {
+          deleteAddress(id).then(res=>{
+            this.getResiverList()
+            if(res.data.flag){
+              this.$message({
+                message:"删除成功",
+                type:"success"
+              })
+            }
+          }).catch(err=>{
+            return
+          })
+        }).catch(() => {
+          return
+        });
+
+
 
       },
 

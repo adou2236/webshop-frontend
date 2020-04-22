@@ -1,5 +1,7 @@
 <template>
-  <div>订单列表</div>
+  <div id="all">
+    订单
+  </div>
 </template>
 
 <script>
@@ -9,5 +11,8 @@
 </script>
 
 <style scoped>
+  #all{
+    width: 100%;
+  }
 
 </style>

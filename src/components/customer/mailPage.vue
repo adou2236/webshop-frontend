@@ -12,15 +12,17 @@
         </el-input>
       </div>
       <div  class="userInfo">
-        <div class="userAvg"  @click="$router.push({path:'/userMsg'})">
+        <div class="userAvg">
           <div><el-avatar  :size="40" icon="el-icon-user-solid"></el-avatar></div>
           <el-popover
-            :disabled="userName!==''"
+            :disabled="userName===null"
             placement="bottom"
+            :visible-arrow="false"
             width="90"
             trigger="hover">
-            <div style="text-align: center; margin: 0">
-<!--              <el-button style="width: 80%" type="danger" size="mini" @click="logout">退出</el-button>-->
+            <div style="text-align: center; margin: 0;font-size: 25px">
+              <el-link type="primary" @click="$router.push({path:'/userMsg'})">个人中心</el-link><br>
+              <el-link type="danger" @click="logout">退出</el-link>
             </div>
             <span slot="reference" class="userName">{{userName||'未登录'}}  <i class="el-icon-arrow-down"></i></span>
           </el-popover>
@@ -38,7 +40,7 @@
                     <div class="goodName" >{{item.name}}</div>
                     <div style="font-size: 14px;font-weight:700;color:#d44d44">￥{{item.price}} <span style="font-size:12px;color: #cacaca"> x {{item.num}}</span></div>
                   </div>
-                  <div style="display:flex;right: 30px;position: fixed;height: 80px">
+                  <div style="display:flex;right: 30px;position: absolute;height: 80px">
                     <el-button style="margin:auto" size="mini" type="danger" icon="el-icon-close" circle></el-button>
                   </div>
                 </div>
@@ -108,7 +110,6 @@
       }
     },
     mounted () {
-      console.log("缓存数据")
       this.getCartGoods()
     },
     computed:{
@@ -118,7 +119,6 @@
     },
     watch:{
       mycart(newVal, oldVal) {
-        console.log(newVal)
         this.totalNum =newVal
       }
     },
@@ -128,7 +128,6 @@
       },
       getCartGoods(){
         let cartGoods = state.cart
-        console.log(state.cart)
         this.totalNum = cartGoods.totalNum
         cartGoods.goods.forEach(item=>{
           getGood(item.id).then(response => {
@@ -141,6 +140,10 @@
 
         })
 
+      },
+      logout(){
+        localStorage.removeItem('token')
+        this.$router.push({name:'userLogin'})
       },
       putRate(){
         this.visible=false
@@ -215,7 +218,6 @@
     height: 350px;
   }
   .userAvg {
-    cursor: pointer;
     display: flex;
     padding: 0 40px;
     align-items:center;
