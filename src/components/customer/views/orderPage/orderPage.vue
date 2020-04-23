@@ -170,7 +170,6 @@
       setProvince(data){
         console.log("data",data)
         this.localform.areaAddress = data.province.value+' '+data.city.value+' '+data.area.value
-
       },
       updateAddress(){
         this.localform.userId = localStorage.getItem("userId")
@@ -223,7 +222,6 @@
 
         }
         this.dialogFormVisible=true
-
       },
       updateLocation(value){//修改要传_id
         this.stopBubbling(event);
@@ -270,10 +268,10 @@
           return {product:obj.id,sum:obj.num}
         })
         let data = {
-          resiver:"5e8eee365b2cfff218614d6f",
+          resiver:this.flag,
           payMethod:that.payMot,
           goodsList:ns,
-          orderUser:'5e870403ade3df40b4b68594'
+          orderUser:localStorage.getItem('userId')
         }
         ceateOrder(data).then(res=>{
           console.log("res",res)
@@ -404,7 +402,7 @@
   }
   .payBtn{
     float: right;
-    box-shadow: 0 0 10px 3px #d6d6d6;
+    box-shadow: 0 0 10px 3px rgba(212, 215, 217, 0.99);
   }
   .operation{
     box-sizing: border-box;

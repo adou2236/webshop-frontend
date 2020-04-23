@@ -40,6 +40,14 @@
         {id:4,name:'占位',value:'unDetermin'}]
       }
     },
+    mounted () {
+      const currentPage = this.options.find(item=>{
+        return item.value === this.$route.name
+      })
+      this.name=currentPage.name;
+      this.flag = currentPage.id
+
+    },
     methods:{
       pushRouter(value){
         this.flag=value.id

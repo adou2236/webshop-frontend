@@ -12,10 +12,10 @@
         </el-input>
       </div>
       <div  class="userInfo">
-        <div class="userAvg">
+        <div @click="$router.push({path:'/login'})" class="userAvg">
           <div><el-avatar  :size="40" icon="el-icon-user-solid"></el-avatar></div>
           <el-popover
-            :disabled="userName===null"
+            :disabled="token===null"
             placement="bottom"
             :visible-arrow="false"
             width="90"
@@ -24,7 +24,7 @@
               <el-link type="primary" @click="$router.push({path:'/userMsg'})">个人中心</el-link><br>
               <el-link type="danger" @click="logout">退出</el-link>
             </div>
-            <span slot="reference" class="userName">{{userName||'未登录'}}  <i class="el-icon-arrow-down"></i></span>
+            <span slot="reference" class="userName">{{token===null?'未登录':userName}}  <i class="el-icon-arrow-down"></i></span>
           </el-popover>
         </div>
         <div @click="toCartPage" class="cart">
@@ -99,6 +99,7 @@
     name: 'mailPage',
     data(){
       return{
+        token:localStorage.getItem('token'),
         userName :localStorage.getItem('name'),
         cart:[],
         value:0,
@@ -143,7 +144,7 @@
       },
       logout(){
         localStorage.removeItem('token')
-        this.$router.push({name:'userLogin'})
+        this.$router.push({name:'home'})
       },
       putRate(){
         this.visible=false
@@ -213,11 +214,12 @@
     background-color: #1a1a1a;
   }
   .footer{
-    background-color: cornflowerblue;
+    /*background-color: cornflowerblue;*/
     width: 100%;
     height: 350px;
   }
   .userAvg {
+    cursor: pointer;
     display: flex;
     padding: 0 40px;
     align-items:center;

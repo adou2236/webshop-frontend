@@ -5,6 +5,7 @@ import mainBox from '../components/admin/views/mainBox'
 import userManage from '../components/admin/views/userManage/userManage'
 import catgoryManage from '../components/admin/views/catgoryManage/catgoryManage'
 import productManage from '../components/admin/views/productManage/productManage'
+import bannerManage from '../components/admin/views/productManage/bannerManage'
 import orderManage from '../components/admin/views/orderManage/orderManage'
 import firstPage from '../components/admin/views/firstPage/firstPage'
 import insertProd from '../components/admin/views/insertProd/insertProd'
@@ -64,7 +65,7 @@ export default new Router({
           path: '/userMsg',
           name: 'userDetails',
           component: userDetails,
-          redirect:'/userMsg/resiverList',
+          redirect:'/userMsg/orderList',
           children: [
             {
               path:'/userMsg/resiverList',
@@ -113,6 +114,10 @@ export default new Router({
         path:'/admin/product',
         name: 'productManage',
         component: productManage,
+       },{
+        path:'/admin/banner',
+        name: 'bannerManage',
+        component: bannerManage,
        },{
         path:'/admin/order',
         name: 'orderManage',

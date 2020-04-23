@@ -45,6 +45,10 @@
           <i class="el-icon-goods"></i>
           <span slot="title">商品</span>
         </el-menu-item>
+        <el-menu-item index="/admin/banner">
+          <i class="el-icon-goods"></i>
+          <span slot="title">首页banner添加</span>
+        </el-menu-item>
         <el-menu-item index="/admin/insertProd">
           <i class="el-icon-plus"></i>
           <span slot="title">商品录入</span>
@@ -129,6 +133,7 @@
     display: flex;
   }
   .sideBar{
+    height: 100%;
     background-color: rgb(84,92,100);
     bottom:0;
     left: 0;

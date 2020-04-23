@@ -66,7 +66,7 @@
             <div style="margin-left:10px;display: flex">总金额为:￥{{totalMoney}}</div>
           </div>
           <div class="payBtn">
-            <el-button type="primary" size="big" @click="sendOrder">确认订单</el-button>
+            <el-button type="primary" size="big" :disabled="totalNum===0" @click="sendOrder">确认订单</el-button>
           </div>
         </div>
       </div>
@@ -137,7 +137,7 @@
 </script>
 
 <style lang="scss">
-  thead tr th:first-child div{
+  .table thead tr th:first-child div{
     visibility: hidden;
   }
 

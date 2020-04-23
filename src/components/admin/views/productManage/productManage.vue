@@ -22,7 +22,6 @@
     </div>
     <div class="showArea">
       <el-table
-        height="480"
         border
         :data="tableData"
         style="width: 100%">

@@ -63,3 +63,11 @@ export const deleteAddress = (id) =>{
     method:"DELETE",
   })
 }
+
+export const getOrders = (params) =>{
+  return $http({
+    url:'/api/order',
+    method:"GET",
+    params:params
+  })
+}
