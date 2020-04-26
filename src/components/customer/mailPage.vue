@@ -12,7 +12,7 @@
         </el-input>
       </div>
       <div  class="userInfo">
-        <div @click="$router.push({path:'/login'})" class="userAvg">
+        <div @click="token===null?$router.push({path:'/login'}):$router.push({path:'/userMsg'})" class="userAvg">
           <div><el-avatar  :size="40" icon="el-icon-user-solid"></el-avatar></div>
           <el-popover
             :disabled="token===null"
@@ -34,13 +34,13 @@
             trigger="hover">
             <div  style="min-height: 20px;max-height: 500px;overflow: auto;text-align: center; margin: 0">
               <div v-for="item in cart" >
-                <div style="padding:10px 0;display: flex;border-bottom:1px #424242 solid">
+                <div style="padding:10px 0;display: flex;border-bottom:1px #424242 solid;position: relative">
                   <el-image style="border:1px solid;width: 80px;height: 80px" fit="cover" :src="item.img"/>
                   <div style="padding: 15px 10px">
                     <div class="goodName" >{{item.name}}</div>
                     <div style="font-size: 14px;font-weight:700;color:#d44d44">￥{{item.price}} <span style="font-size:12px;color: #cacaca"> x {{item.num}}</span></div>
                   </div>
-                  <div style="display:flex;right: 30px;position: absolute;height: 80px">
+                  <div style="display:flex;right: 10px;position: absolute;height: 80px">
                     <el-button style="margin:auto" size="mini" type="danger" icon="el-icon-close" circle></el-button>
                   </div>
                 </div>
@@ -88,12 +88,20 @@
       </el-popover>
 
     </div>
+<!--    <transition @after-enter='afterEnter' @before-enter="beforeEnter">-->
+<!--      &lt;!&ndash;整张图片&ndash;&gt;-->
+<!--      <div class="move_img" v-if="showMoveImg"-->
+<!--           :style="{left:(cartPositionL-10) + 'px',top:(cartPositionT-10) + 'px'}">-->
+<!--        <div><img :src="moveImgUrl"></div>-->
+<!--      </div>-->
+<!--    </transition>-->
   </div>
 </template>
 
 <script>
   import state from '../../store/state'
   import {getGood, submitRate} from '../../apis/customer'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'mailPage',
@@ -114,20 +122,59 @@
       this.getCartGoods()
     },
     computed:{
-      mycart(){
+      // ...mapGetters(['messArray_get']),
+
+      mycartNum(){
+
         return state.cart.totalNum
+      },
+      mycartGoods(){
+        return state.cart.goods
       }
     },
     watch:{
-      mycart(newVal, oldVal) {
+      // messArray_get : function(val){
+      //   console.log("messArray_get ",val)
+      // },
+      mycartNum(newVal, oldVal) {
         this.totalNum =newVal
+      },
+      mycartGoods(newVal, oldVal) {
+          this.getCartGoods()
       }
     },
     methods:{
+      // listenInCart () {
+      //   this.ADD_ANIMATION({moveShow: false, receiveInCart: true})
+      // },
+      // beforeEnter (el) {
+      //   let elStyle = el.style
+      //   let elChild = el.children[0]
+      //   let elChildSty = elChild.style
+      //   elStyle.transform = `translate3d(0,${this.elTop - this.cartPositionT}px,0)`
+      //   elChildSty.transform = `translate3d(${-(this.cartPositionL - this.elLeft)}px,0,0) scale(1.2)`
+      // },
+      // afterEnter (el) {
+      //   let elStyle = el.style
+      //   let elChild = el.children[0]
+      //   let elChildSty = elChild.style
+      //   elStyle.transform = `translate3d(0,0,0)`
+      //   elChildSty.transform = `translate3d(0,0,0) scale(.2)`
+      //   elStyle.transition = 'transform .55s cubic-bezier(.29,.55,.51,1.08)'
+      //   elChildSty.transition = 'transform .55s linear'
+      //   // 动画结束
+      //   elChild.addEventListener('transitionend', () => {
+      //     this.listenInCart()
+      //   })
+      //   elChild.addEventListener('webkitAnimationEnd', () => {
+      //     this.listenInCart()
+      //   })
+      // },
       toCartPage(){
       this.$router.push({path:'/cart'})
       },
       getCartGoods(){
+        // this.cart = []
         let cartGoods = state.cart
         this.totalNum = cartGoods.totalNum
         cartGoods.goods.forEach(item=>{

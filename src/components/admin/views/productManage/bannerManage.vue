@@ -24,39 +24,101 @@
               <el-image fit="scale-down" style="width: 100px; height: 100px" :src="scope.row.imgUrl"></el-image>
             </template>
           </el-table-column>
-<!--          <el-table-column-->
-<!--            label="操作"-->
-<!--            width="120">-->
-<!--            <template slot-scope="scope">-->
-<!--              <el-button-->
-<!--                @click.native.prevent="deleteRow(scope.$index, cartData)"-->
-<!--                type="danger"-->
-<!--                size="mini">-->
-<!--                移除-->
-<!--              </el-button>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+          <el-table-column
+            label="操作"
+            width="120">
+            <template slot-scope="scope">
+              <el-button
+                @click.native.prevent="deleteBanner(scope.row)"
+                type="danger"
+                size="mini">
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
     </div>
+    <el-dialog title="新增banner"
+               :visible.sync="dialogFormVisible">
+      <el-form :model="banner">
+        <el-form-item label="选择商品" label-width="120px">
+          <el-select v-model="banner.product" placeholder="请选择">
+            <el-option
+              v-for="item in products"
+              :key="item._id"
+              :label="item.name"
+              :value="item._id">
+              <span style="float: left"><el-image style="width: 40px;height: 40px" fit="cover" :src="item.cover"></el-image></span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="图片地址" label-width="120px">
+          <el-input v-model="banner.imgUrl"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible=false">取 消</el-button>
+        <el-button type="primary" @click="updateBanner">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-  import {getBanner} from '../../../../apis/admin'
+  import {deleteBanner, getBanner, updateBanner} from '../../../../apis/admin'
+  import {getAllGoods} from '../../../../apis/customer'
 
   export default {
     name: 'bannerManage',
     data(){
       return{
+        dialogFormVisible:false,
+        products:[],
+        banner:{
+          product: '',
+          imgUrl: ''
+        },
         bannerData:[]
       }
     },
     mounted () {
       console.log("EEE")
       this.getAllBanner()
+      this.getAllProduct()
     },
     methods:{
+      updateBanner(){
+        let data = {
+         imgUrl:this.banner.imgUrl,
+         prodId:this.banner.product
+        }
+        updateBanner(data).then(res=>{
+          console.log(res)
+        }).catch(err=>{
+          console.log(err)
+        })
+
+      },
+      getAllProduct(){
+        getAllGoods().then(res=>{
+          if(res.data.flag){
+          this.products = res.data.data.data
+          }
+        }).catch(err=>{
+
+        })
+      },
+      deleteBanner(row){
+        deleteBanner(row._id).then(res=>{
+          console.log(res)
+        }).catch(err=>{
+          console.log(err)
+        })
+      },
       addNewBanner(){
+        this.dialogFormVisible = true
 
       },
       getAllBanner(){

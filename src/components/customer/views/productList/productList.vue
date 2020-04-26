@@ -6,7 +6,7 @@
         </a>
       </div>
       <div class="showArea">
-        <div class="goodsBox" v-for="good in goods">
+        <div @click="gotoDetails(good._id)" class="goodsBox" v-for="good in goods">
           <el-image class="goodImg" fit="cover" :src="good.cover">
             <div slot="placeholder" class="image-slot">
               加载中
@@ -69,7 +69,19 @@
       })
     },
     methods:{
+      gotoDetails(id){
+       this.$router.push({path:'/product',query: {id:id}})
+      },
+      stopBubbling(e) {
+        e = window.event || e;
+        if (e.stopPropagation) {
+          e.stopPropagation();      //阻止事件 冒泡传播
+        } else {
+          e.cancelBubble = true;   //ie兼容
+        }
+      },
       addToCart(good){
+        this.stopBubbling(event);
         this.$store.commit('changeCart', good._id);
       },
       changeOrder(v){

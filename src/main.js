@@ -51,7 +51,7 @@ Vue.config.productionTip = false
 //   return Promise.reject(error);
 // });
 
-const freePage = ['/home', '/productList', '/product','/login', '/register','/admin/login'] // 无需验证token的页面
+const freePage = ['test','/home', '/productList', '/product','/login', '/register','/admin/login'] // 无需验证token的页面
 
 //路由跳转统一处理，token反验证
 router.beforeEach((to, from, next) => {

@@ -5,6 +5,7 @@ let cart = {
   goods:[],
   totalNum:0
 };
+
 try {
   if (localStorage.getItem('token')) {
     token = localStorage.getItem('token')

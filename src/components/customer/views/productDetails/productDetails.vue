@@ -1,5 +1,7 @@
 <template>
-    <div>商品详情</div>
+    <div id="all">
+      商品详情
+    </div>
 </template>
 
 <script>

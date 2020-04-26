@@ -23,6 +23,10 @@ export default{
     } catch (e) {}
   },
   changeCart (state,cart){
+    const getters = {
+      messArray_get:state=>state.cart.goods,
+    }
+
     if(state.cart.totalNum===0){
       state.cart.goods.push({id:cart,num:1})
     }else{
@@ -48,5 +52,21 @@ export default{
 
     }
 
-  }
+  },
+  deleteFromCart(state,id){
+    const result = state.cart.goods.filter(item=>{
+      return item.id !==id
+    })
+    state.cart.goods =result
+    state.cart.totalNum = 0
+    state.cart.goods.map(item=>{
+      state.cart.totalNum +=item.num
+    })
+    try{
+      localStorage.cart =JSON.stringify(state.cart)
+    }catch (e) {
+
+    }
+  },
+
 }

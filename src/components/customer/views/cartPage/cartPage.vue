@@ -46,7 +46,7 @@
             width="120">
             <template slot-scope="scope">
               <el-button
-                @click.native.prevent="deleteRow(scope.$index, cartData)"
+                @click.native.prevent="deleteRow(scope.$index,scope.row.id, cartData)"
                 type="danger"
                 size="mini">
                 移除
@@ -117,8 +117,10 @@
         })
 
       },
-      deleteRow(){
-
+      deleteRow(index,id,cartDate){
+        // console.log(index,cartDate)
+        cartDate.splice(index,1)
+        this.$store.commit('deleteFromCart', id);
       },
       handleSelectionChange(e){
         this.totalNum = 0

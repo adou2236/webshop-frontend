@@ -21,12 +21,18 @@ import userDetails from '../components/customer/views/userDetails/userDetails'
 import orderList from '../components/customer/views/userDetails/orderList'
 import resiverList from '../components/customer/views/userDetails/resiverList'
 import unDetermin from '../components/customer/views/userDetails/unDetermin'
+import test from '../components/customer/views/test'
 
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/test',
+      name: 'test',
+      component: test,
+    },
     {
       path: '/',
       name: 'mailPage',
