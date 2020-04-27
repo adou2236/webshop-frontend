@@ -145,9 +145,22 @@
 
       }
     },
+    created () {
+      let pageGoods = []
+      pageGoods = this.$route.params.comfirmedGood
+      if(!this.$route.params.comfirmedGood){
+        this.$message({
+          message:"非法操作",
+          type:'error'
+        })
+
+      }else{
+        this.cartData = pageGoods
+        console.log(this.cartData)
+      }
+    },
     computed:{
       sumMoney(){
-        console.log()
         return this.cartData.map(
           row=>row.price*row.num).reduce(
           (acc, cur) => (cur + acc), 0)
@@ -155,7 +168,7 @@
     },
     mounted () {
       this.getResiverList()
-      this.getCartGoods()
+      // this.getCartGoods()
 
     },
     methods:{
@@ -185,22 +198,22 @@
           }
         })
       },
-      getCartGoods(){
-        let cartGoods = state.cart
-        console.log(state.cart)
-        this.totalNum = cartGoods.totalNum
-        cartGoods.goods.forEach(item=>{
-          getGood(item.id).then(response => {
-            if(response.data.flag){
-              let {data} = response.data
-              this.cartData.push({id:data._id,name:data.name,price:data.price,num:item.num,cover:data.cover})
-            }
-          }).catch(err=>{
-          })
-
-        })
-
-      },
+      // getCartGoods(){
+      //   let cartGoods = state.cart
+      //   console.log(state.cart)
+      //   this.totalNum = cartGoods.totalNum
+      //   cartGoods.goods.forEach(item=>{
+      //     getGood(item.id).then(response => {
+      //       if(response.data.flag){
+      //         let {data} = response.data
+      //         this.cartData.push({id:data._id,name:data.name,price:data.price,num:item.num,cover:data.cover})
+      //       }
+      //     }).catch(err=>{
+      //     })
+      //
+      //   })
+      //
+      // },
       getResiverList(){
         getResiver({userId:localStorage.getItem("userId")}).then(res=>{
           if(res.data.flag){

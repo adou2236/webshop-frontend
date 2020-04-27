@@ -32,11 +32,14 @@
           <el-form-item style=" text-align: left" label="商品图片" prop="cover">
             <el-upload
               class="upload-demo"
+              :limit="1"
               drag
-              action="https://jsonplaceholder.typicode.com/posts/">
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+              action="/api/imgUpload/upImg"
+              :on-success="handlePictureCardPreview"
+              :on-remove="handleRemove">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
           </el-form-item>
           <el-form-item style="text-align: left;padding:0 50px" label-width="0">
@@ -53,13 +56,14 @@
     name: 'insertProd',
     data() {
       return {
+        dialogVisible: false,
         goodCatgorys:[],
         ruleForm: {
           name: '',
           category: '',
           price: 0.01,
           count: 0,
-          cover:'https://pic3.zhimg.com/v2-5c0974ffafe3d44ab5aefa5932783529_1200x500.jpg'
+          cover:''
         },
         rules: {
           name: [
@@ -83,6 +87,16 @@
       this.getCategory()
     },
     methods: {
+      handleRemove(file, fileList) {
+        console.log("删除了")
+        this.ruleForm.cover = '';
+        this.dialogVisible = false;
+      },
+      handlePictureCardPreview(response, file, fileList) {
+        console.log("上传成功",response,file)
+        this.ruleForm.cover = response.data.url;
+        this.dialogVisible = true;
+      },
       wordFlip(words){
         let arrList = words.split(' ')
         let result = ''
@@ -92,8 +106,7 @@
         }
         return result.trim()
       },
-
-  submitForm(formName) {
+      submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.newProduct(formName)

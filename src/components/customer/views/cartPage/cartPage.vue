@@ -56,9 +56,9 @@
         </el-table>
       </div>
       <div class="optionBar">
-        <div class="checkAll">
-          <el-checkbox style="margin: auto" v-model="checked" @change="$refs.multipleTable.toggleAllSelection()" >{{checked?'全不选':'全选'	}}</el-checkbox>
-        </div>
+<!--        <div class="checkAll">-->
+<!--          <el-checkbox style="margin: auto" v-model="checked" @change="toggleSelection(cartData)" >{{checked?'全不选':'全选'	}}</el-checkbox>-->
+<!--        </div>-->
         <div class="message">
           <div class="sumMsg">
             <div style="display: flex;margin-right:10px">共{{totalNum}}件商品</div>
@@ -86,6 +86,7 @@
     components: {HTitle},
     data(){
       return{
+        comfirmedGood:[],
         checked:false,
         totalMoney:0,
         totalNum:0,
@@ -99,7 +100,7 @@
     },
     methods:{
       sendOrder(){
-        this.$router.push({path:"/order"})
+        this.$router.push({name:"orderPage",params:{comfirmedGood:this.comfirmedGood}})
 
       },
       getCartGoods(){
@@ -125,6 +126,7 @@
       handleSelectionChange(e){
         this.totalNum = 0
         this.totalMoney = 0
+        this.comfirmedGood = e
         if(e.length!==0){
           e.forEach(item=>{
               this.totalNum+=item.num
@@ -139,9 +141,9 @@
 </script>
 
 <style lang="scss">
-  .table thead tr th:first-child div{
-    visibility: hidden;
-  }
+  /*.table thead tr th:first-child div{*/
+  /*  visibility: hidden;*/
+  /*}*/
 
 </style>
 

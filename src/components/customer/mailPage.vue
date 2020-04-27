@@ -61,7 +61,16 @@
     <div class="mainBox">
       <router-view>子页面</router-view>
     </div>
-    <div class="footer">页脚工具</div>
+    <div class="footer">
+      <div><h4>其他链接:</h4>
+        <span><h5>后台管理系统</h5></span>
+        <span><h5>git地址</h5></span>
+      </div>
+      <div>联系方式:
+
+      </div>
+    </div>
+
     <div class="rateTool">
       <el-popover
         v-model="visible"
@@ -86,7 +95,6 @@
         </div>
         <el-button slot="reference" type="danger" icon="el-icon-star-off" circle></el-button>
       </el-popover>
-
     </div>
 <!--    <transition @after-enter='afterEnter' @before-enter="beforeEnter">-->
 <!--      &lt;!&ndash;整张图片&ndash;&gt;-->
@@ -174,7 +182,7 @@
       this.$router.push({path:'/cart'})
       },
       getCartGoods(){
-        // this.cart = []
+        this.cart = []
         let cartGoods = state.cart
         this.totalNum = cartGoods.totalNum
         cartGoods.goods.forEach(item=>{
@@ -260,10 +268,16 @@
     height: 100px;
     background-color: #1a1a1a;
   }
-  .footer{
+  .footer {
+    border-top: 1px solid #e6e6e6;
+    background: #fafafa;
+    text-align: left;
+    float: left;
+    margin-top: 40px;
+    padding: 40px 10vw;
     /*background-color: cornflowerblue;*/
     width: 100%;
-    height: 350px;
+    height: 150px;
   }
   .userAvg {
     cursor: pointer;
