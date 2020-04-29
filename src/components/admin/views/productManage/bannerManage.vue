@@ -42,7 +42,7 @@
                :visible.sync="dialogFormVisible">
       <el-form :model="banner">
         <el-form-item label="选择商品" label-width="120px">
-          <el-select v-model="banner.product" placeholder="请选择">
+          <el-select style="width: 100%" v-model="banner.product" placeholder="请选择">
             <el-option
               v-for="item in products"
               :key="item._id"
@@ -84,7 +84,6 @@
       }
     },
     mounted () {
-      console.log("EEE")
       this.getAllBanner()
       this.getAllProduct()
     },
@@ -95,9 +94,21 @@
          prodId:this.banner.product
         }
         updateBanner(data).then(res=>{
-          console.log(res)
+          if(res.data.flag){
+            this.dialogFormVisible=false
+            this.$message({
+              message:res.data.message,
+              type:"success"
+            })
+            this.getAllBanner()
+          }
         }).catch(err=>{
-          console.log(err)
+          if(!err.response.data.flag){
+            this.$message({
+              message:err.response.data.message,
+              type:"error"
+            })
+          }
         })
 
       },
@@ -112,9 +123,20 @@
       },
       deleteBanner(row){
         deleteBanner(row._id).then(res=>{
-          console.log(res)
+          if(res.data.flag){
+            this.$message({
+              message:res.data.message,
+              type:'success'
+            })
+            this.getAllBanner()
+          }
         }).catch(err=>{
-          console.log(err)
+          if(!err.response.data.flag){
+            this.$message({
+              message:err.response.data.message,
+              type:'error'
+            })
+          }
         })
       },
       addNewBanner(){

@@ -31,7 +31,7 @@
           <el-popover
             placement="bottom"
             width="250"
-            trigger="click">
+            trigger="hover">
             <div  style="min-height: 20px;max-height: 500px;overflow: auto;text-align: center; margin: 0">
               <div   v-for="item in cart" >
                 <div style="padding:10px 0;display: flex;border-bottom:1px #424242 solid;position: relative">

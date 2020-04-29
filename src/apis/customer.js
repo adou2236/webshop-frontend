@@ -87,3 +87,11 @@ export const overTime = (data) =>{
     data:data
   })
 }
+
+export const removeOrder = (data) =>{
+  return $http({
+    url:'/api/order/removeOrder',
+    method:"DELETE",
+    data:data
+  })
+}

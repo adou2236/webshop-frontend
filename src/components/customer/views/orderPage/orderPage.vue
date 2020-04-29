@@ -289,6 +289,9 @@
 
       payBill(){
         const that = this
+        that.cartData.forEach(item=>{
+          this.$store.commit("deleteFromCart",item.id)
+        })
         let ns = that.cartData.map(obj=>{
           return {product:obj.id,sum:obj.num}
         })

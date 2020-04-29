@@ -40,7 +40,7 @@
 
 <script>
   // import
-  import {getOrders} from '../../../../apis/customer'
+  import {getOrders, removeOrder} from '../../../../apis/customer'
   import Test from '../test'
 
   export default {
@@ -56,8 +56,23 @@
     },
     methods:{
       removeOrder(id){
-        console.log(id)
-
+        removeOrder({orderId:id}).then(res=>{
+          if(res.data.flag){
+            this.$message({
+              message:res.data.message,
+              type:'success'
+            })
+            this.getAllOrder(localStorage.getItem('userId'),'')
+          }
+        }).catch(err=>{
+          console.log(err)
+          if(!err.response.data.flag){
+            this.$message({
+              message:err.response.data.message,
+              type:'error'
+            })
+          }
+        })
       },
       payBill(e){
         console.log("EEEEEEEEEEE")
