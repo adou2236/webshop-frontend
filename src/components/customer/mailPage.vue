@@ -1,8 +1,8 @@
 <template>
   <div id="all">
     <div class="toolBar">
-      <div style="cursor: pointer" @click="$router.push({path:'/home'})" class="logo">
-        <i class="el-icon-platform-eleme"></i>
+      <div style="cursor: pointer" @click="$router.push({path:'/home'})" class="logo vueblog-font">
+        Gmall
       </div>
       <div class="searchArea">
         <el-input
@@ -31,9 +31,9 @@
           <el-popover
             placement="bottom"
             width="250"
-            trigger="hover">
+            trigger="click">
             <div  style="min-height: 20px;max-height: 500px;overflow: auto;text-align: center; margin: 0">
-              <div v-for="item in cart" >
+              <div   v-for="item in cart" >
                 <div style="padding:10px 0;display: flex;border-bottom:1px #424242 solid;position: relative">
                   <el-image style="border:1px solid;width: 80px;height: 80px" fit="cover" :src="item.img"/>
                   <div style="padding: 15px 10px">
@@ -41,10 +41,11 @@
                     <div style="font-size: 14px;font-weight:700;color:#d44d44">￥{{item.price}} <span style="font-size:12px;color: #cacaca"> x {{item.num}}</span></div>
                   </div>
                   <div style="display:flex;right: 10px;position: absolute;height: 80px">
-                    <el-button style="margin:auto" size="mini" type="danger" icon="el-icon-close" circle></el-button>
+                    <el-button @click="removeGood(item._id)" style="font-size:10px;margin:auto" size="mini" type="danger" icon="el-icon-close" circle></el-button>
                   </div>
                 </div>
               </div>
+              <div v-if="isEmpty">购物车为空</div>
             </div>
             <div slot="reference" >
               <el-badge :value="totalNum" :max="99" >
@@ -64,10 +65,14 @@
     <div class="footer">
       <div><h4>其他链接:</h4>
         <span><h5>后台管理系统</h5></span>
-        <span><h5>git地址</h5></span>
+        <span><h5>git地址:www.github.com/adou2236</h5></span>
       </div>
-      <div>联系方式:
-
+      <div style="margin-left: 20px"><h4>联系方式</h4>
+        <span><h5>qq:609597441</h5></span>
+        <span><h5>邮箱:6009597441@qq.com</h5></span>
+      </div>
+      <div style="display:flex;align-items:center;margin-left: 20px">
+        <h3>本人2019本科毕业，今年23岁，目前积极找工作中，如果你能给我提供工作机会，请联系我吧</h3>
       </div>
     </div>
 
@@ -110,11 +115,13 @@
   import state from '../../store/state'
   import {getGood, submitRate} from '../../apis/customer'
   import {mapGetters} from 'vuex'
+  import '../../../static/font/font.css'
 
   export default {
     name: 'mailPage',
     data(){
       return{
+        isEmpty:true,
         token:localStorage.getItem('token'),
         userName :localStorage.getItem('name'),
         cart:[],
@@ -178,6 +185,10 @@
       //     this.listenInCart()
       //   })
       // },
+      removeGood(id){
+        console.log(id)
+        this.$store.commit('deleteFromCart', id);
+      },
       toCartPage(){
       this.$router.push({path:'/cart'})
       },
@@ -189,7 +200,10 @@
           getGood(item.id).then(response => {
             if(response.data.flag){
               let {data} = response.data
-              this.cart.push({id:data.id,name:data.name,price:data.price,num:item.num,img:data.cover})
+              this.cart.push({_id:data._id,name:data.name,price:data.price,num:item.num,img:data.cover})
+              if(this.cart.length!==0){
+                this.isEmpty = false
+              }
             }
           }).catch(err=>{
           })
@@ -249,6 +263,8 @@
     font-size: 50px;
     left:10%;
     position: absolute;
+    background-color: #1a1a1a;
+    color: #F2F2F2;
   }
   .searchArea{
     float: right;
@@ -269,6 +285,8 @@
     background-color: #1a1a1a;
   }
   .footer {
+    box-sizing: border-box;
+    display: flex;
     border-top: 1px solid #e6e6e6;
     background: #fafafa;
     text-align: left;
@@ -277,7 +295,6 @@
     padding: 40px 10vw;
     /*background-color: cornflowerblue;*/
     width: 100%;
-    height: 150px;
   }
   .userAvg {
     cursor: pointer;

@@ -109,13 +109,26 @@
           <el-button type="primary" @click="updateAddress">确 定</el-button>
         </div>
       </el-dialog>
+      <el-dialog title="新增收货地址"
+                 :visible.sync="testDia">
+        <el-button @click="correctPay">模拟支付点这里</el-button>
+        <el-button @click="errorPay">模拟超时点这里</el-button>
+      </el-dialog>
     </div>
 </template>
 
 <script>
   import hTitle from '../tools/hTitle'
   import state from '../../../../store/state'
-  import {getGood, ceateOrder, getResiver, updateAddress, deleteAddress} from '../../../../apis/customer'
+  import {
+    getGood,
+    ceateOrder,
+    getResiver,
+    updateAddress,
+    deleteAddress,
+    correctPay,
+    overTime
+  } from '../../../../apis/customer'
   import HTitle from '../tools/hTitle'
 
   export default {
@@ -123,6 +136,8 @@
     components: {HTitle},
     data(){
       return{
+        orderId:'',
+        testDia:false,
         localform:{
           name:'',
           phone:'',
@@ -270,9 +285,6 @@
         }).catch(() => {
           return
         });
-
-
-
       },
 
       payBill(){
@@ -287,14 +299,31 @@
           orderUser:localStorage.getItem('userId')
         }
         ceateOrder(data).then(res=>{
-          console.log("res",res)
-
+          if(res.data.flag){
+            this.orderId = res.data.data.orderId
+            this.testDia=true
+          }
         }).catch(err=>{
           console.log("err",err)
-
-
         })
-
+      },
+      correctPay(){
+        correctPay({orderId:this.orderId}).then(res=>{
+          console.log(res)
+        }).catch(err=>{
+          console.log(err)
+        })
+        this.testDia=false
+        this.$router.push({path:'/home'})
+      },
+      errorPay(){
+        overTime({orderId:this.orderId}).then(res=>{
+          console.log(res)
+        }).catch(err=>{
+          console.log(err)
+        })
+        this.testDia=false
+        this.$router.push({path:'/home'})
       }
     }
   }

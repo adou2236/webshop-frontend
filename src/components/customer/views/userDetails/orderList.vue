@@ -16,17 +16,23 @@
         <div class="goods">
           <div class="detail" v-for="good in item.goodsList">
             <img style="width: 80px;height: 80px" :src="good.product.cover">
-            <span style="margin-left: 10px;display:flex;align-items: center;font-size: 14px">{{good.product.name}}</span>
+            <span style="font-size: 14px">{{good.product.name}}</span>
+            <span style="font-size: 16px">￥{{good.payPrice}}</span>
+            <span style="font-size: 14px">X{{good.sum}}</span>
+            <span style="font-size: 16px">￥{{good.payPrice*good.sum}}</span>
+
           </div>
         </div>
         <div class="situation">
           <span class="tags">￥{{item.totalMoney}}</span>
           <span class="tags" v-if="item.status===0"><el-button @click="payBill(item.orderId)" type="primary" size="mini">立即支付</el-button></span>
           <span class="tags" v-else-if="item.status===1">支付成功</span>
-          <span class="tags" v-else>超时失效</span>
+          <span class="tags remove" v-else>
+            <span class="dispaire">超时失效</span>
+            <el-button class="removeBtn" size="mini" type="danger" @click="removeOrder(item.orderId)">删除订单</el-button>
+          </span>
         </div>
       </div>
-<!--     -->
 
     </div>
   </div>
@@ -35,9 +41,11 @@
 <script>
   // import
   import {getOrders} from '../../../../apis/customer'
+  import Test from '../test'
 
   export default {
     name: 'orderList',
+    components: {Test},
     data(){
       return{
         orderList:[]
@@ -47,6 +55,10 @@
       this.getAllOrder(localStorage.getItem('userId'),'')
     },
     methods:{
+      removeOrder(id){
+        console.log(id)
+
+      },
       payBill(e){
         console.log("EEEEEEEEEEE")
         console.log(e)
@@ -60,6 +72,7 @@
         getOrders(params).then(res=>{
           if(res.data.flag){
             this.orderList = res.data.data.orderList
+            console.log("this.orderList",this.orderList)
           }
         }).catch(err=>{
           console.log(err)
@@ -83,6 +96,8 @@
     background-color: #eee;
   }
   .detail{
+    justify-content: space-around;
+    align-items: center;
     border-bottom: 1px solid #dcdcdc;
     display: flex;
     margin:0 20px;
@@ -108,5 +123,21 @@
     width: 50%;
     justify-content: center
   }
+  .removeBtn{
+    display: none;
+  }
 
+</style>
+<style lang="scss">
+  .remove{
+    &:hover {
+      .dispaire {
+        display: none;
+      }
+      .removeBtn {
+        text-align: center;
+        display: block;
+      }
+    }
+  }
 </style>

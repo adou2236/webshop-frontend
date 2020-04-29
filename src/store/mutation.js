@@ -54,6 +54,7 @@ export default{
 
   },
   deleteFromCart(state,id){
+    console.log("ASD")
     const result = state.cart.goods.filter(item=>{
       return item.id !==id
     })

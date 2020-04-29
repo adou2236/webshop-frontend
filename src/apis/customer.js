@@ -71,3 +71,19 @@ export const getOrders = (params) =>{
     params:params
   })
 }
+
+export const correctPay = (data) =>{
+  return $http({
+    url:'/api/order/correctPay',
+    method:"PUT",
+    data:data
+  })
+}
+
+export const overTime = (data) =>{
+  return $http({
+    url:'/api/order/overTime',
+    method:"PUT",
+    data:data
+  })
+}

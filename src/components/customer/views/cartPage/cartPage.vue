@@ -56,9 +56,11 @@
         </el-table>
       </div>
       <div class="optionBar">
-<!--        <div class="checkAll">-->
-<!--          <el-checkbox style="margin: auto" v-model="checked" @change="toggleSelection(cartData)" >{{checked?'全不选':'全选'	}}</el-checkbox>-->
-<!--        </div>-->
+        <div class="checkAll">
+<!--            -->
+<!--          <el-button @click="toggleSelection(cartData)">全选</el-button>-->
+          <el-button style="margin: auto" @click="toggleSelection(cartData)" >{{checked?'全不选':'全选'}}</el-button>
+        </div>
         <div class="message">
           <div class="sumMsg">
             <div style="display: flex;margin-right:10px">共{{totalNum}}件商品</div>
@@ -87,23 +89,41 @@
     data(){
       return{
         comfirmedGood:[],
-        checked:false,
+        checked:true,
         totalMoney:0,
         totalNum:0,
         cartData:[]
       }
     },
     computed:{
+      mycartGoods(){
+        return state.cart.goods
+      }
     },
     mounted () {
       this.getCartGoods()
     },
+    watch:{
+      mycartGoods(newVal, oldVal) {
+        this.getCartGoods()
+      }
+    },
     methods:{
+      toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row,
+              !this.checked)
+          })
+          this.checked = !this.checked
+        }
+      },
       sendOrder(){
         this.$router.push({name:"orderPage",params:{comfirmedGood:this.comfirmedGood}})
 
       },
       getCartGoods(){
+        this.cartData = []
         let cartGoods = state.cart
         console.log("ccc",state.cart)
         cartGoods.goods.forEach(item=>{
@@ -111,6 +131,12 @@
             if(response.data.flag){
               let {data} = response.data
               this.cartData.push({id:data._id,name:data.name,price:data.price,num:item.num,cover:data.cover})
+              this.$nextTick(()=>{
+                this.cartData.forEach(row => {
+                  this.$refs.multipleTable.toggleRowSelection(row,true)
+                })
+              })
+
             }
           }).catch(err=>{
           })
@@ -119,7 +145,6 @@
 
       },
       deleteRow(index,id,cartDate){
-        // console.log(index,cartDate)
         cartDate.splice(index,1)
         this.$store.commit('deleteFromCart', id);
       },
@@ -141,9 +166,9 @@
 </script>
 
 <style lang="scss">
-  /*.table thead tr th:first-child div{*/
-  /*  visibility: hidden;*/
-  /*}*/
+  .table thead tr th:first-child div{
+    visibility: hidden;
+  }
 
 </style>
 

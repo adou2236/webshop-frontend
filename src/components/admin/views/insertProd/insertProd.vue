@@ -16,6 +16,15 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item style=" text-align: left" label="商品描述" prop="describe">
+            <el-input
+              resize="none"
+              type="textarea"
+              maxlength="255"
+              show-word-limit
+              :autosize="{ minRows: 2, maxRows: 4}"
+              style="width: 203px" v-model="ruleForm.describe" placeholder="商品描述"></el-input>
+          </el-form-item>
           <el-form-item style=" text-align: left" label="商品价格" prop="price">
             <el-input-number v-model="ruleForm.price"
                              :precision="2"
@@ -31,8 +40,11 @@
           </el-form-item>
           <el-form-item style=" text-align: left" label="商品图片" prop="cover">
             <el-upload
+              ref="upload"
               class="upload-demo"
               :limit="1"
+              :file-list="imgList"
+              :auto-upload="false"
               drag
               action="/api/imgUpload/upImg"
               :on-success="handlePictureCardPreview"
@@ -56,11 +68,13 @@
     name: 'insertProd',
     data() {
       return {
+        imgList:[],
         dialogVisible: false,
         goodCatgorys:[],
         ruleForm: {
           name: '',
           category: '',
+          describe:'',
           price: 0.01,
           count: 0,
           cover:''
@@ -87,15 +101,17 @@
       this.getCategory()
     },
     methods: {
+      submitUpload(){
+        this.$refs.upload.submit()
+      },
       handleRemove(file, fileList) {
         console.log("删除了")
         this.ruleForm.cover = '';
-        this.dialogVisible = false;
       },
       handlePictureCardPreview(response, file, fileList) {
         console.log("上传成功",response,file)
         this.ruleForm.cover = response.data.url;
-        this.dialogVisible = true;
+        this.newProduct('ruleForm')
       },
       wordFlip(words){
         let arrList = words.split(' ')
@@ -109,7 +125,7 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.newProduct(formName)
+            this.submitUpload()
           } else {
             return false;
           }
@@ -148,6 +164,7 @@
           }
           else{
             this.$refs[formName].resetFields();
+            this.imgList = []
             this.$message({
               message:response.data.message,
               type:'success'

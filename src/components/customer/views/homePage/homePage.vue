@@ -7,15 +7,19 @@
                       style="border-radius:5px;width:1200px;height:500px;background-color: #1a1a1a"></el-image>
         </el-carousel-item>
       </el-carousel>
+      <populate-goods></populate-goods>
     </div>
   </div>
 </template>
 
 <script>
   import {getBanner} from '../../../../apis/admin'
+  import populateGoods from './populateGoods'
+  import PopulateGoods from './populateGoods'
 
   export default {
     name: 'homePage',
+    components: {PopulateGoods},
     data(){
       return{
         bannerList:[]

@@ -13,7 +13,7 @@
             </div>
           </el-image>
           <div class="title">{{good.name}}</div>
-          <div class="details">描述</div>
+          <div class="details">{{good.describe}}</div>
           <div class="price">
             <div class="addToCart">
               <el-button size="mini" type="danger" @click="addToCart(good)">加入购物车</el-button>
@@ -144,6 +144,8 @@
     margin-bottom: 10px;
   }
   .details{
+    overflow: hidden;
+    text-overflow: ellipsis;
     margin-bottom: 10px;
     font-size: 12px;
     color: #d0d0d0;
