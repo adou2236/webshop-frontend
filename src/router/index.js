@@ -106,7 +106,7 @@ export default new Router({
       path:'/admin',
       name: 'mainBox',
       component: mainBox,
-      redirect:'/admin/user',
+      redirect:'/admin/firstPage',
       children:[{
         path:'/admin/user',
         name: 'userManage',

@@ -2,6 +2,8 @@ import $http from './apis'
 
 
 
+
+
 export const getAllGoods = (params) => {
   return $http({
     url:'/api/products',

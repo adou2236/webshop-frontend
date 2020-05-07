@@ -26,8 +26,9 @@
     </div>
 </template>
 <script>
-  import {getGood} from '../../apis/customer'
-  import state from '../../store/state'
+
+
+  import {adminLogin} from '../../apis/admin'
 
   export default {
     name: 'adminLogin',
@@ -57,20 +58,24 @@
       login(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$http({
-              method:"POST",
-              url:"/api/admin/login",
-              data:{
-                name:this.ruleForm.name,
-                password:this.ruleForm.password
-              }
-            }).then(response=>{
+            let data = {
+              name:this.ruleForm.name,
+              password:this.ruleForm.password
+            }
+            adminLogin(data).then(response=>{
               console.log(response)
               if(!response.data.flag){
                 this.$message({
                   message:response.data.message,
                   type:'error'
                 })
+              }else{
+                this.$store.commit('changeAdminState', response.data.data.adminToken);
+                let redirect = '/admin'
+                if(this.$route.query.redirect){
+                  redirect = this.$route.query.redirect
+                }
+                this.$router.push({path:redirect})
               }
             }).catch(error=>{
               console.log(error)

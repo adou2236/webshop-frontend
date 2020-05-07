@@ -9,25 +9,23 @@ import store from "../src/store/index"
 import axios from 'axios';
 import VDistpicker from 'v-distpicker'
 
-
 Vue.component('v-distpicker', VDistpicker)//地区选择器
 
 Vue.use(ElementUI)
 
-var testLocal = localStorage.getItem("test");
+var testLocal = "fuckyou";
 var $http = axios.create({
   headers: {'userInfoCode': testLocal}
 });
 Vue.prototype.$http = $http;
 
-Vue.config.productionTip = false
 
-
-// //request拦截器，为每一个请求头部添加token
+// //request拦截
 // $http.interceptors.request.use(
 //   config => {
-//     if (sessionStorage.getItem("fmsTokeId")) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
-//       config.headers.fmsTokeId = sessionStorage.getItem("fmsTokeId");
+//     if (localStorage.getItem('token')) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+//       console.log("有token")
+//       config.headers.token = localStorage.getItem("token");
 //     }
 //     return config;
 //   },
@@ -38,11 +36,11 @@ Vue.config.productionTip = false
 //
 // //response拦截，token失效转到登录
 // $http.interceptors.response.use(function (response) {
-//   if(response.data.resultCode==='222222'){
+//   if(response.data.message==='tokenError'){
 //     alert('登录超时，请重新登录');
 //     localStorage.clear();
 //     router.replace({
-//       path: '/',
+//       path: '/login',
 //     })
 //   }
 //   return response;
@@ -51,28 +49,47 @@ Vue.config.productionTip = false
 //   return Promise.reject(error);
 // });
 
-const freePage = ['test','/home', '/productList', '/product','/login', '/register','/admin/login'] // 无需验证token的页面
+const freePage = ['/test','/home', '/productList', '/product','/login', '/register'] // 无需验证token的页面
+const whiteList = '/admin/login'
 
 //路由跳转统一处理，token反验证
 router.beforeEach((to, from, next) => {
-  if (freePage.indexOf(to.path)===-1) {  // 判断该路由是否需要token
-    if (localStorage.getItem("token")) {  // 获取当前的token是否存在
-      next();
-    }
-    else {
-      next({
-        path: '/login',
-        query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
-      })
+  if(to.path.indexOf('admin')===-1) {//客户端验证
+    console.log("客户端验证")
+    if (freePage.indexOf(to.path) === -1) {  // 判断该路由是否需要token
+      if (localStorage.getItem("token")) {  // 获取当前的token是否存在
+        next();
+      } else {
+        next({
+          path: '/login',
+          query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
+        })
+      }
+    }else{
+      next()
     }
   }
-  else {
-    next();
+  else {//服务端验证
+    console.log("服务端验证")
+
+    if (to.path !== whiteList) {  // 判断该路由是否需要token
+      if (localStorage.getItem("adminToken")) {  // 获取当前的token是否存在
+        next();
+      } else {
+        next({
+          path: '/admin/login',
+          query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
+        })
+      }
+    }else{
+      next()
+    }
   }
 });
 
 
-/* eslint-disable no-new */
+
+Vue.config.productionTip = false
 new Vue({
   el: '#app',
   store,

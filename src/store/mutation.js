@@ -5,6 +5,12 @@ export default{
       localStorage.token = token
     } catch (e) {}
   },
+  changeAdminState (state, adminToken) {
+    state.adminToken = adminToken;
+    try {
+      localStorage.adminToken = adminToken
+    } catch (e) {}
+  },
   changeUserId (state, userId) {
     state.userId = userId;
     try {

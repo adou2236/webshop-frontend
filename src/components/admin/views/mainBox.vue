@@ -133,7 +133,6 @@
     display: flex;
   }
   .sideBar{
-    height: 100%;
     background-color: rgb(84,92,100);
     bottom:0;
     left: 0;
